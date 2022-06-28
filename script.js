@@ -1,4 +1,5 @@
-console.log("RPS start");
+const roundRes = document.querySelector('#roundResults');
+const gameRes = document.querySelector('#gameResults');
 
 function computerPlay(){
     const choices = ["Rock", "Paper", "Scissors"];
@@ -9,40 +10,37 @@ function computerPlay(){
     return result
 }
 
-function playerPlay(){
-    const rawInput = prompt("Rock, paper, or scissors? ");
-    const normInput = `${rawInput.slice(0,1).toUpperCase()}${rawInput.slice(1).toLocaleLowerCase()}`;
-    switch (normInput){
-        case "Rock":
-        case "Paper":
-        case "Scissors":
-            console.log(normInput);
-            return normInput;
-        default:
-            alert("That is not a valid choice.");
-            break;
+function checkGameState(){
+    if (playerWins >= 5){
+        alert("You won!");
+    }
+    else if (computerWins >= 5){
+        alert("The computer won!");
+    }
+    else {
     }
 }
 
-function playRound(){
+function playRound(playerSelection){
     const computerSelection = computerPlay();
-    const playerSelection = playerPlay();
     compare(playerSelection, computerSelection);
+    gameRes.textContent = `The player\'s score is ${playerWins}. The computer\'s score is ${computerWins}.`;
+    checkGameState();
 }
 
 function compare(playerSelection, computerSelection){
     if (playerSelection=="Rock"){
         switch (computerSelection){
             case "Rock":
-                console.log("It's a tie. You both chose rock.");
+                roundRes.textContent = "It's a tie. You both chose rock.";
                 break;
             case "Paper":
                 ++computerWins;
-                console.log("The computer wins. Paper beats rock.");
+                roundRes.textContent = "The computer wins. Paper beats rock.";
                 break;
             case "Scissors":
                 ++playerWins;
-                console.log("You win. Rock beats scissors.");
+                roundRes.textContent = "You win. Rock beats scissors.";
                 break;
             default:
                 alert("Something went horribly wrong.");
@@ -52,15 +50,15 @@ function compare(playerSelection, computerSelection){
     else if (playerSelection=="Paper"){
         switch (computerSelection){
             case "Paper":
-                console.log("It's a tie. You both chose paper.");
+                roundRes.textContent = "It's a tie. You both chose paper.";
                 break;
             case "Scissors":
                 ++computerWins;
-                console.log("The computer wins. Scissors beats paper.");
+                roundRes.textContent = "The computer wins. Scissors beats paper.";
                 break;
             case "Rock":
                 ++playerWins;
-                console.log("You win. Paper beats rock.");
+                roundRes.textContent = "You win. Paper beats rock.";
                 break;
             default:
                 alert("Something went horribly wrong.");
@@ -70,15 +68,15 @@ function compare(playerSelection, computerSelection){
     else if (playerSelection=="Scissors") {
         switch (computerSelection){
             case "Scissors":
-                console.log("It's a tie. You both chose scissors.");
+                roundRes.textContent = "It's a tie. You both chose scissors.";
                 break;
             case "Rock":
                 ++computerWins;
-                console.log("The computer wins. Rock beats scissors.");
+                roundRes.textContent = "The computer wins. Rock beats scissors.";
                 break;
             case "Paper":
                 ++playerWins;
-                console.log("You win. Scissors beats paper.");
+                roundRes.textContent = "You win. Scissors beats paper.";
                 break;
             default:
                 alert("Something went horribly wrong.");
@@ -90,13 +88,11 @@ function compare(playerSelection, computerSelection){
     }
 }
 
-function game(){
-    for (i=0; i<5; i++) {
-        playRound();
-        console.log(`The player has won ${playerWins} games. The computer has won ${computerWins} games.`);
-    }
-}
 let playerWins = 0;
 let computerWins = 0;
-game();
-alert("That's five games. Thanks for playing!");
+const buttons = document.querySelectorAll(".button");
+for (const btn of buttons){
+    btn.addEventListener('click', (e) => {
+        playRound(e.target.textContent);
+    })
+}
